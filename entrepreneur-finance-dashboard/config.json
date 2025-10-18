@@ -1,0 +1,15 @@
+{
+  "modules": [
+    "overview",
+    "airbnb",
+    "content",
+    "trading",
+    "goals"
+  ],
+  "dataSources": {
+    "airbnb": "data/airbnb.json",
+    "content": "data/content.json",
+    "trading": "data/trading.json",
+    "goals": "data/goals.json"
+  }
+}
