@@ -25,8 +25,13 @@ export function renderTrading() {
           <div>
             <label class="form-label">Date</label>
             <input type="date" id="trade-date" class="form-input" value="${getCurrentDate()}">
-          </div>
-          <div>
+        </div>
+    `;
+    
+    container.appendChild(summary);
+    container.appendChild(table);
+  }
+}    <div>
             <label class="form-label">Asset/Symbol</label>
             <input type="text" id="trade-asset" class="form-input" placeholder="AAPL">
           </div>
