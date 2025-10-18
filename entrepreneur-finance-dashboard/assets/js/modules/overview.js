@@ -148,7 +148,79 @@ function render5WeekOutlook(data) {
   });
 
   const columns = [
-    { key: 'week', label: 'Week' },
+    { 
+      key: 'balance', 
+      label: 'Balance',
+      format: (val) => formatCurrency(val)
+    }
+  ];
+
+  const table = createTable(columns, outlook);
+  const container = document.getElementById('cash-flow-table');
+  if (container) {
+    container.innerHTML = '';
+    container.appendChild(table);
+  }
+}
+
+/**
+ * Render cash balance projection chart
+ */
+function renderCashProjection(data) {
+  const allIncome = [...(data.income?.personal || []), ...(data.income?.business || [])];
+  const allExpenses = [...(data.expenses?.personal || []), ...(data.expenses?.business || [])];
+  const allDebts = [...(data.debts?.personal || []), ...(data.debts?.business || [])];
+
+  const projection = projectCashBalance({
+    startingCash: data.currentCash || 0,
+    income: allIncome,
+    expenses: allExpenses,
+    debts: allDebts,
+    weeksAhead: 63,
+    startDate: formatDate(new Date())
+  });
+
+  renderAreaChart('cash-projection-chart', projection, {
+    height: '400px'
+  });
+}
+
+/**
+ * Render debt summary cards
+ */
+function renderDebtSummary(data) {
+  const metrics = calculateDashboardMetrics(data);
+
+  // Personal Debt Card
+  const personalCard = document.createElement('div');
+  personalCard.className = 'kpi-card';
+  personalCard.innerHTML = `
+    <div class="kpi-label">Personal Debt</div>
+    <div class="kpi-value negative">${formatCurrency(metrics.totalDebtPersonal)}</div>
+    <div class="text-sm text-secondary mt-sm">${metrics.activeDebtsPersonal} active debts</div>
+  `;
+
+  const personalContainer = document.getElementById('debt-personal-card');
+  if (personalContainer) {
+    personalContainer.innerHTML = '';
+    personalContainer.appendChild(personalCard);
+  }
+
+  // Business Debt Card
+  const businessCard = document.createElement('div');
+  businessCard.className = 'kpi-card';
+  businessCard.innerHTML = `
+    <div class="kpi-label">Business Debt</div>
+    <div class="kpi-value negative">${formatCurrency(metrics.totalDebtBusiness)}</div>
+    <div class="text-sm text-secondary mt-sm">${metrics.activeDebtsBusiness} active debts</div>
+  `;
+
+  const businessContainer = document.getElementById('debt-business-card');
+  if (businessContainer) {
+    businessContainer.innerHTML = '';
+    businessContainer.appendChild(businessCard);
+  }
+} key: 'week', label: 'Week' },
     { 
       key: 'weekStart', 
       label: 'Date',
